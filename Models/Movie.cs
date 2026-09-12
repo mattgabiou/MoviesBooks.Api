@@ -19,7 +19,7 @@ namespace MoviesBooks.Api.Models;
 // otherwise, so property names that already equal column names need nothing.
 // [Table] pins the class to the real table name. Convention would guess
 // "Movies" from the DbSet name in Step 6, so this is belt-and-suspenders.
-[Table("Movies")]
+[Table("Movie_Name")]
 public class Movie
 {
     // Convention: a property named <ClassName>Id is the primary key.

@@ -92,6 +92,23 @@ app.MapGet("/weatherforecast", () =>
 // Phase 3 for React) use it as the method name.
 .WithName("GetWeatherForecast");
 
+
+// GET /movies — returns a list of movies from SQL Server.
+// The lambda declares an AppDbContext parameter; ASP.NET sees that type is
+// registered in DI and injects a fresh, scoped instance for this request.
+// No "new AppDbContext(...)" anywhere; that's the point of Step 6.
+app.MapGet("/movies", async (AppDbContext db) =>
+    await db.Movies
+        // Projection: build an anonymous object with only the fields we want.
+        // EF translates this to "SELECT MovieId, Name, Year FROM Movies",
+        // not "SELECT *", so the other columns never leave the database.
+        .Select(m => new { m.MovieId, m.Name, m.Year })
+        // Nothing has run yet — this line sends the query. Async so the
+        // request thread is released while SQL Server does its work.
+        .ToListAsync())
+    .WithName("GetMovies");
+
+
 // Starts Kestrel (the web server) and blocks until shutdown (Ctrl+C).
 // Nothing above this line handles a request; this is where listening begins.
 app.Run();
