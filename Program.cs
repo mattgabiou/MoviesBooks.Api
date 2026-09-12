@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using MoviesBooks.Api.Data;
+
 // ============================================================
 // Program.cs — MoviesBooks.Api
 // This file uses "top-level statements": there is no Main() method.
@@ -21,6 +24,12 @@ builder.Services.AddEndpointsApiExplorer();
 // into an OpenAPI/Swagger JSON document. Registered here, produced later
 // on request at /swagger/v1/swagger.json.
 builder.Services.AddSwaggerGen();
+
+// Registers AppDbContext in the DI container as a scoped service (one per
+// HTTP request) and tells it to use SQL Server with the connection string
+// named "Default" — which in Development resolves from user-secrets.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // THE DIVIDING LINE.
 // Before: describe what you need (services). After: define how requests
